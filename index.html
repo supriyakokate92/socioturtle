@@ -16,7 +16,8 @@
           colors: {
             primary: '#22D3EE',
             secondary: '#C084FC',
-            dark: '#0F172A'
+            dark: '#0F172A',
+            light: '#FFF'
           }
         }
       }
@@ -26,11 +27,11 @@
 
 <body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
   <!-- Navigation Bar -->
-  <header class="bg-white shadow-md fixed w-full z-10">
+  <header class="site-header fixed w-full z-10">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
       <div class="flex items-center space-x-2" onclick="showPage('home')">
         <img src="./images/logo_socioturtle.png" alt="Socioturtle Logo" class="h-10 w-10 object-contain">
-        <span class="text-xl font-bold text-dark">SocioTurtle</span>
+        <span class="text-xl font-semibold text-light">SocioTurtle</span>
       </div>
 
       <nav class="hidden md:flex space-x-8">
@@ -46,7 +47,7 @@
     </div>
 
     <!-- Mobile Menu -->
-    <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+    <div id="mobile-menu" class="site-mobile-menu hidden md:hidden">
       <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
         <!-- <button onclick="showPage('home')" class="nav-link font-medium py-2">Home</button> -->
         <button onclick="showPage('about')" class="nav-link font-medium py-2">About Us</button>
@@ -106,7 +107,7 @@
         </div>
 
         <!-- 🔄 HOW IT WORKS -->
-        <section id="ecosystem" class="py-28 fade-in">
+        <section id="ecosystem" class="pt-12 pb-28 fade-in">
           <div class="container mx-auto px-4 text-center">
 
             <h2 class="text-4xl font-bold mb-4">
@@ -235,10 +236,58 @@
         <div class="text-center mb-16">
           <h1 class="text-4xl font-bold mb-4">About Us</h1>
           <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-            SocioTurtle was founded by <span class="font-bold">Poonam Pal</span>, a technology professional with nearly
-            two decades of experience in the IT industry. Through her journey across sectors, she realized that while
-            digital platforms connect people, they rarely encourage meaningful conversations and deeper learning.
+            SocioTurtle is building a more outcome-driven bridge between learning and opportunity by connecting
+            students, educators, and employers through visible skills, stronger validation, and meaningful community.
           </p>
+        </div>
+        <!-- Leadership Story -->
+        <div class="about-story mb-16">
+          <div class="about-story-grid">
+            <div class="about-founder-card">
+              <div class="about-founder-media">
+                <img src="./images/founder_pic.jpeg" alt="Poonam Pal" class="about-founder-image">
+                <div class="about-founder-badge">Founder &amp; CEO</div>
+              </div>
+              <div class="about-founder-copy">
+                <p class="about-story-eyebrow">Where It Began</p>
+                <h2 class="about-story-title">Poonam Pal built SocioTurtle from a conviction she carried through every transformation room.</h2>
+                <p class="about-story-text">
+                  After 19+ years leading enterprise transformation across telecom, banking, automobile, oil and gas,
+                  chemicals, manufacturing, and media, she saw the same pattern again and again: capability existed,
+                  but access to opportunity did not.
+                </p>
+                <p class="about-story-text">
+                  With an MBA in Entrepreneurship from IIM Kozhikode and deep SAP S/4HANA transformation expertise,
+                  she founded SocioTurtle to make learning more visible, validation more credible, and opportunity more
+                  accessible.
+                </p>
+              </div>
+            </div>
+
+            <div class="about-quote-card">
+              <p class="about-story-eyebrow">Founder’s Belief</p>
+              <blockquote class="about-founder-quote">
+                “Talent is everywhere, but opportunity is not equally distributed.”
+              </blockquote>
+              <p class="about-quote-support">
+                SocioTurtle exists to close that gap by connecting students, educators, and employers in one continuous
+                story of learning, validation, and opportunity.
+              </p>
+            </div>
+
+            <div class="about-ops-card">
+              <p class="about-story-eyebrow">Execution At Scale</p>
+              <h3 class="text-2xl font-bold mb-3">Anurag Pal, Head of Operations</h3>
+              <p class="text-gray-600 text-sm leading-7">
+                Anurag brings startup execution discipline from Rivigo, Chalo, and Pristyn Care. With experience across
+                business expansion, SOP creation, KPI-led management, vendor alignment, and P&amp;L ownership, he helps
+                SocioTurtle translate vision into systems that can scale.
+              </p>
+              <a href="https://www.linkedin.com/in/anurag-pal-593861b1/" target="_blank" class="about-inline-link">
+                View Anurag on LinkedIn
+              </a>
+            </div>
+          </div>
         </div>
         <!-- Core Values -->
         <div class="bg-white rounded-xl shadow-md p-8 mb-16">
@@ -474,23 +523,28 @@
             <div class="bg-white rounded-xl shadow-md p-8 flex-1">
 
               <div class="mt-4 mb-4">
-                <h2 class="text-2xl font-bold mb-6">Survey</h2>
-                <div class="bg-blue-50 border border-blue-100 rounded-lg p-4 flex items-center justify-between">
+                <div class="survey-callout">
+                  <h2 class="text-2xl font-bold mb-3">Take the Survey</h2>
+                  <p class="text-sm text-gray-700 mb-5">
+                    The survey is the fastest way to shape what SocioTurtle builds next. If you do one thing here, make it this.
+                  </p>
+                  <div class="survey-panel">
 
-                  <div>
-                    <p class="text-sm font-medium text-gray-800">
-                      Help us improve 🙌
-                    </p>
-                    <p class="text-xs text-gray-600">
-                      Takes less than 30 seconds
-                    </p>
+                    <div>
+                      <p class="text-sm font-medium text-gray-800">
+                        Help us improve 🙌
+                      </p>
+                      <p class="text-xs text-gray-600">
+                        Takes less than 30 seconds
+                      </p>
+                    </div>
+
+                    <a href="https://forms.gle/ANZFyAmjvGzHyo3R7" target="_blank"
+                      class="survey-link ml-4 bg-primary text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-secondary transition whitespace-nowrap">
+                      Take Survey →
+                    </a>
+
                   </div>
-
-                  <a href="https://forms.gle/ANZFyAmjvGzHyo3R7" target="_blank"
-                    class="ml-4 bg-primary text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-secondary transition whitespace-nowrap">
-                    Take Survey →
-                  </a>
-
                 </div>
               </div>
               <h2 class="text-2xl font-bold mb-6 pt-6 border-t">Send Feedback</h2>
