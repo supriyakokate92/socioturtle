@@ -82,7 +82,7 @@
             outcome-driven career pathways.
           </p>
 
-          <button onclick="showPage('about')" class="bg-primary text-white px-6 py-3 rounded-lg font-semibold">
+          <button onclick="goToEcosystem()" class="bg-primary text-white px-6 py-3 rounded-lg font-semibold">
             See How It Works
           </button>
         </div>
@@ -90,17 +90,17 @@
         <!-- 👥 ROLES -->
         <!-- 🎭 Role Switcher -->
         <div class="text-center">
-          <h2 class="text-3xl font-bold mb-6">Who is this for?</h2>
+          <h2 class="roles-heading text-3xl font-bold mb-6">Who is this for?</h2>
 
           <div class="flex justify-center space-x-4 mb-8">
-            <button onclick="switchRole('student', this)" class="role-btn active">Student</button>
-            <button onclick="switchRole('educator', this)" class="role-btn">Educator</button>
-            <button onclick="switchRole('employer', this)" class="role-btn">Employer</button>
+            <button onclick="switchRole('student', this)" class="role-btn role-btn-student active">Student</button>
+            <button onclick="switchRole('educator', this)" class="role-btn role-btn-educator">Educator</button>
+            <button onclick="switchRole('employer', this)" class="role-btn role-btn-employer">Employer</button>
           </div>
 
           <!-- Dynamic Content -->
           <div class="stagger flex justify-center">
-            <div id="roleContent" class="role-card">
+            <div id="roleContent" class="role-card role-card-student">
             </div>
           </div>
 
@@ -115,8 +115,8 @@
             </h2>
 
             <p class="text-gray-500 max-w-2xl mx-auto mb-20">
-              Students, educators, and employers continuously interact — learning,
-              validating, and creating opportunities together.
+              SocioTurtle makes the path easy to understand: students build proof,
+              educators validate growth, and employers discover talent with confidence.
             </p>
 
             <div class="eco-wrapper relative mx-auto">
@@ -128,15 +128,19 @@
                     <stop offset="0%" stop-color="#22D3EE"></stop>
                     <stop offset="100%" stop-color="#C084FC"></stop>
                   </linearGradient>
-                  <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
-                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#7c93f6"></path>
+                  <marker id="arrowhead" markerWidth="14" markerHeight="14" refX="11" refY="7" orient="auto"
+                    markerUnits="strokeWidth">
+                    <path d="M 1 1 L 13 7 L 1 13 z" fill="#7c93f6"></path>
                   </marker>
                 </defs>
-                <path class="line line-student-educator" data-connection="student-educator" d="M 344 112 C 292 148 244 220 190 300" marker-end="url(#arrowhead)"></path>
-                <path class="line line-student-employer" data-connection="student-employer" d="M 516 112 C 568 148 616 220 670 300" marker-end="url(#arrowhead)"></path>
-                <path class="line line-educator-employer" data-connection="educator-employer" d="M 260 394 C 366 474 494 474 600 394" marker-end="url(#arrowhead)"></path>
+                <path class="line line-student-educator" data-connection="student-educator"
+                  d="M 370 164 C 304 198 244 226 180 264" marker-end="url(#arrowhead)"></path>
+                <path class="line line-student-employer" data-connection="student-employer"
+                  d="M 490 164 C 556 198 616 226 680 264" marker-end="url(#arrowhead)"></path>
+                <path class="line line-educator-employer" data-connection="educator-employer"
+                  d="M 326 388 C 396 436 456 436 526 388" marker-end="url(#arrowhead)"></path>
               </svg>
-              
+
               <!-- Nodes -->
               <!-- STUDENT -->
               <div class="eco-node top-node" data-role="student">
@@ -168,15 +172,15 @@
                 </div>
               </div>
               <div class="line-label student-educator" data-connection="student-educator">
-                <i class="fas fa-user-check"></i> Validation
+                <i class="fas fa-user-check"></i> Mentoring & verification
               </div>
 
               <div class="line-label student-employer" data-connection="student-employer">
-                <i class="fas fa-briefcase"></i> Hiring
+                <i class="fas fa-briefcase"></i> Talent discovery
               </div>
 
               <div class="line-label educator-employer" data-connection="educator-employer">
-                <i class="fas fa-handshake"></i> Collaboration
+                <i class="fas fa-handshake"></i> Outcome alignment
               </div>
 
             </div>
@@ -245,27 +249,52 @@
           <div class="about-story-grid">
             <div class="about-founder-card">
               <div class="about-founder-media">
-                <img src="./images/founder_pic.jpeg" alt="Poonam Pal" class="about-founder-image">
-                <div class="about-founder-badge">Founder &amp; CEO</div>
+                <div class="about-founder-frame">
+                  <img src="./images/founder_pic.jpeg" alt="Poonam Pal" class="about-founder-image">
+                </div>
+                <div class="about-founder-note">
+                  <span class="about-founder-note-label">Poonam Pal, Founder</span>
+                  <p>Built on 19+ years of transformation leadership across industries and systems.</p>
+                </div>
               </div>
               <div class="about-founder-copy">
-                <p class="about-story-eyebrow">Where It Began</p>
-                <h2 class="about-story-title">Poonam Pal built SocioTurtle from a conviction she carried through every transformation room.</h2>
+                <p class="about-story-eyebrow">Our Beginning</p>
+                <h2 class="about-story-title">SocioTurtle began with a simple conviction: talent deserves access to opportunity.</h2>
                 <p class="about-story-text">
                   After 19+ years leading enterprise transformation across telecom, banking, automobile, oil and gas,
-                  chemicals, manufacturing, and media, she saw the same pattern again and again: capability existed,
-                  but access to opportunity did not.
+                  chemicals, manufacturing, and media, Poonam Pal saw the same pattern again and again: capability
+                  existed, but access to opportunity did not.
                 </p>
                 <p class="about-story-text">
-                  With an MBA in Entrepreneurship from IIM Kozhikode and deep SAP S/4HANA transformation expertise,
-                  she founded SocioTurtle to make learning more visible, validation more credible, and opportunity more
-                  accessible.
+                  SocioTurtle was born from that insight: make learning more visible, validation more credible, and
+                  opportunity more accessible for every learner ready to move forward.
                 </p>
+                <div class="about-founder-credentials">
+                  <span class="about-founder-pill">MBA, IIM Kozhikode</span>
+                  <span class="about-founder-pill">SAP S/4HANA Expert</span>
+                  <span class="about-founder-pill">Enterprise Transformation Leader</span>
+                </div>
+                <div class="about-founder-journey">
+                  <div class="about-founder-journey-item">
+                    <span class="about-founder-journey-step">01</span>
+                    <div>
+                      <h3>Observed the gap</h3>
+                      <p>Strong capability existed, but real visibility and access did not.</p>
+                    </div>
+                  </div>
+                  <div class="about-founder-journey-item">
+                    <span class="about-founder-journey-step">02</span>
+                    <div>
+                      <h3>Built a response</h3>
+                      <p>SocioTurtle connects learning, proof, and opportunity into one continuous path.</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
             <div class="about-quote-card">
-              <p class="about-story-eyebrow">Founder’s Belief</p>
+              <p class="about-story-eyebrow">What Guides Us</p>
               <blockquote class="about-founder-quote">
                 “Talent is everywhere, but opportunity is not equally distributed.”
               </blockquote>
@@ -526,7 +555,8 @@
                 <div class="survey-callout">
                   <h2 class="text-2xl font-bold mb-3">Take the Survey</h2>
                   <p class="text-sm text-gray-700 mb-5">
-                    The survey is the fastest way to shape what SocioTurtle builds next. If you do one thing here, make it this.
+                    The survey is the fastest way to shape what SocioTurtle builds next. If you do one thing here, make
+                    it this.
                   </p>
                   <div class="survey-panel">
 
@@ -677,7 +707,7 @@
         <img src="./images/logo_socioturtle.png" class="h-7 w-7 object-contain">
         <span class="font-semibold">SocioTurtle</span>
         <span class="text-gray-400 text-sm hidden md:inline">
-          Curiosity • Collaboration • Community
+          Learn • Teach • Hire
         </span>
       </div>
       <!-- Social Icons -->
@@ -694,29 +724,26 @@
           <i class="fab fa-linkedin-in"></i>
         </a>
       </div>
-    </div>
+      <!-- Download icon -->
+       <div class="flex items-center space-x-2">
+        <img src="./images/qr.svg" class="w-10 h-10 bg-white p-1 rounded-md">
+        <!-- <i class="fas fa-download text-gray-400"></i> -->
+        <span class="text-sm text-gray-400">Download App</span> 
+      </div>
   </footer>
   <script src="script.js"></script>
   <!-- Floating QR Button -->
   <div class="fixed top-1/2 right-3 md:right-5 -translate-y-1/2 z-50">
 
     <!-- Button -->
-    <button class="qr-btn jelly-btn flex items-center justify-center relative" onclick="toggleQR()">
-
+    <button class="qr-btn jelly-btn flex items-center justify-center relative" onclick="handleQRClick()">
       <i class="fas fa-qrcode text-white text-xl"></i>
-
-      <!-- subtle QR hint -->
-      <div class="absolute bottom-1 right-1 w-3 h-3 bg-white rounded-sm opacity-60"></div>
-
     </button>
 
-    <!-- Popup -->
+    <!-- Popup (Desktop only) -->
     <div id="qrPopup" class="hidden mt-3 bg-white p-4 rounded-xl shadow-xl w-40 text-center">
-
       <p class="text-xs text-gray-500 mb-2">Scan to download</p>
-
       <img src="./images/qr.svg" class="w-24 h-24 mx-auto">
-
       <p class="text-xs text-gray-400 mt-2">Android</p>
     </div>
 

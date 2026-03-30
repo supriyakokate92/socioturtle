@@ -288,7 +288,9 @@
 
   .about-story-grid {
       display: grid;
+      grid-template-columns: minmax(0, 1.28fr) minmax(300px, 0.82fr);
       gap: 24px;
+      align-items: stretch;
   }
 
   .about-founder-card,
@@ -301,37 +303,76 @@
   }
 
   .about-founder-card {
+      position: relative;
       display: grid;
-      grid-template-columns: minmax(220px, 280px) 1fr;
-      gap: 28px;
-      padding: 28px;
-      background: linear-gradient(135deg, rgba(236, 254, 255, 0.95), rgba(255, 255, 255, 0.92));
+      grid-template-columns: minmax(190px, 240px) 1fr;
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      gap: 22px;
+      padding: 26px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+  }
+
+  .about-founder-aurora {
+      display: none;
   }
 
   .about-founder-media {
       position: relative;
+      display: grid;
+      gap: 14px;
+      align-content: start;
+  }
+
+  .about-founder-frame {
+      position: relative;
+      max-width: 220px;
+      padding: 8px;
+      border-radius: 20px;
+      background: rgba(248, 250, 252, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
   }
 
   .about-founder-image {
       width: 100%;
-      aspect-ratio: 4 / 5;
+      aspect-ratio: 5 / 6;
       object-fit: cover;
-      border-radius: 22px;
-      border: 1px solid rgba(34, 211, 238, 0.18);
-      box-shadow: 0 18px 36px rgba(15, 23, 42, 0.12);
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
   }
 
   .about-founder-badge {
-      position: absolute;
-      left: 16px;
-      bottom: 16px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: #ffffff;
-      background: linear-gradient(135deg, #0891b2, #8b5cf6);
-      box-shadow: 0 12px 24px rgba(99, 102, 241, 0.18);
+      display: none;
+  }
+
+  .about-founder-note {
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(248, 250, 252, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      box-shadow: none;
+  }
+
+  .about-founder-note-label {
+      display: inline-block;
+      margin-bottom: 8px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #0f766e;
+  }
+
+  .about-founder-note p {
+      margin: 0;
+      font-size: 0.98rem;
+      line-height: 1.75;
+      color: #155e75;
   }
 
   .about-founder-copy,
@@ -340,21 +381,31 @@
       padding: 28px;
   }
 
+  .about-quote-card,
+  .about-ops-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+  }
+
   .about-story-eyebrow {
       margin-bottom: 12px;
       font-size: 0.76rem;
       font-weight: 700;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: #0891b2;
+      color: #0f766e;
   }
 
   .about-story-title {
-      max-width: 18ch;
+      max-width: 24ch;
       margin-bottom: 16px;
-      font-size: clamp(2rem, 4vw, 3rem);
-      line-height: 1.05;
-      color: #0f172a;
+      font-size: clamp(1.3rem, 2vw, 1.8rem);
+      font-weight: 700;
+      line-height: 1.32;
+      letter-spacing: -0.01em;
+      color: #0f766e;
   }
 
   .about-story-text {
@@ -369,18 +420,93 @@
       margin-bottom: 0;
   }
 
+  .about-founder-credentials {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+  }
+
+  .about-founder-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 9px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #0f766e;
+      background: linear-gradient(135deg, rgba(236, 254, 255, 0.92), rgba(245, 243, 255, 0.92));
+      border: 1px solid rgba(192, 132, 252, 0.2);
+      box-shadow: none;
+  }
+
+  .about-founder-journey {
+      display: grid;
+      gap: 14px;
+      margin-top: 24px;
+  }
+
+  .about-founder-journey-item {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: rgba(248, 250, 252, 0.88);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      box-shadow: none;
+      transition: border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .about-founder-journey-item:hover {
+      background: rgba(255, 255, 255, 0.96);
+      border-color: rgba(148, 163, 184, 0.22);
+  }
+
+  .about-founder-journey-step {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: #0f766e;
+      background: linear-gradient(135deg, rgba(204, 251, 241, 0.95), rgba(224, 242, 254, 0.95));
+      box-shadow: inset 0 0 0 1px rgba(45, 212, 191, 0.24);
+  }
+
+  .about-founder-journey-item h3 {
+      margin: 0 0 6px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0891b2;
+  }
+
+  .about-founder-journey-item p {
+      margin: 0;
+      font-size: 0.95rem;
+      line-height: 1.75;
+      color: #475569;
+  }
+
   .about-quote-card {
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.97), rgba(30, 41, 59, 0.95));
-      border: none;
+      grid-column: 2;
+      grid-row: 1;
+      background: rgba(248, 250, 252, 0.94);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.05);
   }
 
   .about-founder-quote {
-      max-width: 18ch;
+      max-width: 22ch;
       margin: 0 0 16px;
-      font-size: clamp(2rem, 4vw, 3.25rem);
-      font-weight: 700;
-      line-height: 1.08;
-      color: #ffffff;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 650;
+      line-height: 1.2;
+      color: #0891b2;
   }
 
   .about-quote-support {
@@ -388,7 +514,7 @@
       margin: 0;
       font-size: 1rem;
       line-height: 1.85;
-      color: rgba(255, 255, 255, 0.8);
+      color: #475569;
   }
 
   .about-inline-link {
@@ -397,14 +523,14 @@
       margin-top: 18px;
       font-size: 0.95rem;
       font-weight: 600;
-      color: #0f172a;
+      color: #0891b2;
       text-decoration: none;
-      border-bottom: 1px solid rgba(34, 211, 238, 0.35);
+      border-bottom: 1px solid rgba(34, 211, 238, 0.4);
   }
 
   .about-inline-link:hover {
-      color: #0891b2;
-      border-bottom-color: rgba(8, 145, 178, 0.55);
+      color: #7c3aed;
+      border-bottom-color: rgba(192, 132, 252, 0.45);
   }
 
   .survey-callout {
@@ -450,7 +576,36 @@
   }
 
   .about-ops-card {
-      background: linear-gradient(135deg, rgba(239, 246, 255, 0.96), rgba(255, 255, 255, 0.92));
+      grid-column: 2;
+      grid-row: 2;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.05);
+  }
+
+  .about-ops-card h3 {
+      color: #0891b2;
+  }
+
+  @keyframes founderFloat {
+      0%,
+      100% {
+          transform: translateY(0);
+      }
+      50% {
+          transform: translateY(-8px);
+      }
+  }
+
+  @keyframes founderAurora {
+      0%,
+      100% {
+          transform: translate3d(0, 0, 0) scale(1);
+          opacity: 0.85;
+      }
+      50% {
+          transform: translate3d(-18px, -12px, 0) scale(1.06);
+          opacity: 1;
+      }
   }
 
   .flow-card {
@@ -522,6 +677,23 @@ html {
 .stagger.visible > *:nth-child(3) { transition-delay: 0.3s; }
 .stagger.visible > *:nth-child(4) { transition-delay: 0.4s; }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .fade-in,
+  .stagger > *,
+  .about-founder-aurora,
+  .about-founder-frame,
+  .about-founder-note,
+  .about-founder-journey-item {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
 h1 {
   background: linear-gradient(90deg, #22D3EE, #C084FC);
   -webkit-background-clip: text;
@@ -529,12 +701,23 @@ h1 {
 }
 
 /* Flow style start */
+#ecosystem {
+  scroll-margin-top: 110px;
+}
+
 .eco-wrapper {
   width: 100%;
   max-width: 860px;
   height: 540px;
   position: relative;
   margin: 0 auto;
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at top, rgba(34, 211, 238, 0.12), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(248, 250, 252, 0.72));
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  box-shadow: 0 28px 70px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
 }
 
 .eco-wrapper::before {
@@ -547,15 +730,19 @@ h1 {
   width: 100%;
   height: 100%;
   inset: 0;
+  overflow: visible;
 }
 
 .line {
   stroke: url(#lineGradient);
-  stroke-width: 3;
+  stroke-width: 3.5;
   fill: none;
-  opacity: 0.15;   /* softer base */
+  opacity: 0.28;
   pointer-events: visibleStroke;
   transition: opacity 0.2s ease, stroke-width 0.2s ease;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 10px 20px rgba(99, 102, 241, 0.12));
 }
 
 /* highlight active */
@@ -590,20 +777,26 @@ h1 {
   z-index: 1;
   transition: all 0.25s ease;
   width: clamp(180px, 20vw, 260px);
-  padding: 20px;
-
-  background: rgba(255,255,255,0.85);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
+  padding: 22px 22px 18px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 20px;
   text-align: center;
-
-  box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.1);
 }
 
 .eco-node i {
   font-size: 26px;
   color: #22D3EE;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+}
+
+.eco-node span {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
 }
 
 .eco-node:hover {
@@ -612,7 +805,7 @@ h1 {
 
 /* positions aligned with SVG */
 .top-node {
-  top: 86px;
+  top: 102px;
   left: 50%;
 }
 
@@ -633,10 +826,12 @@ h1 {
   left: 50%;
   transform: translateX(-50%);
   font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
   background: #111827;
   color: white;
-  padding: 6px 10px;
-  border-radius: 8px;
+  padding: 7px 12px;
+  border-radius: 999px;
   opacity: 0;
   transition: 0.3s;
 }
@@ -649,8 +844,9 @@ h1 {
 .node-details {
   display: none;
   font-size: 13px;
-  margin-top: 8px;
-  color: #6B7280;
+  line-height: 1.65;
+  margin-top: 10px;
+  color: #475569;
 }
 
 .eco-node.expanded .node-details {
@@ -664,28 +860,34 @@ h1 {
 /* ---------- LABELS ---------- */
 .line-label {
   position: absolute;   /* 🔥 FIX */
+  z-index: 2;
   font-size: 11px;
-  padding: 3px 8px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  padding: 7px 12px;
   opacity: 0;
 
-  background: white;
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(148, 163, 184, 0.14);
   border-radius: 999px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 /* better positions */
 .student-educator {
-  top: 212px;
-  left: 300px;
+  top: 214px;
+  left: 306px;
 }
 
 .student-employer {
-  top: 212px;
-  left: 560px;
+  top: 214px;
+  left: 554px;
 }
 
 .educator-employer {
-  top: 470px;
+  top: 446px;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -698,21 +900,43 @@ h1 {
 
 .eco-node.expanded {
   transform: translate(-50%, -50%) scale(1.08);
-  box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+  box-shadow: 0 26px 58px rgba(15, 23, 42, 0.16);
 }
 /* push others slightly back */
 .eco-wrapper .eco-node:not(.expanded) {
-  opacity: 0.7;
+  opacity: 0.82;
 }
 @media (max-width: 768px) {
 
+  .about-story-grid {
+    grid-template-columns: 1fr;
+  }
+
   .about-founder-card {
     grid-template-columns: 1fr;
+    grid-column: auto;
+    grid-row: auto;
+    padding: 24px;
+  }
+
+  .about-founder-frame {
+    max-width: none;
+  }
+
+  .about-quote-card,
+  .about-ops-card {
+    grid-column: auto;
+    grid-row: auto;
   }
 
   .about-story-title,
   .about-founder-quote {
     max-width: none;
+  }
+
+  .about-founder-badge {
+    left: 24px;
+    top: 24px;
   }
 
   .role-card-inner {
@@ -744,6 +968,7 @@ h1 {
     align-items: center;
     gap: 2.5rem;
     padding: 1.5rem 0;
+    overflow: visible;
   }
 
   .eco-wrapper::before {

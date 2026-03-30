@@ -39,6 +39,9 @@ const roleData = {
 window.onload = () => {
   const firstBtn = document.querySelector(".role-btn");
   switchRole("student", firstBtn);
+  if (isMobile()) {
+  document.querySelector('.qr-btn i').className = 'fas fa-download text-white text-xl';
+}
 };
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -71,14 +74,42 @@ function showPage(pageId) {
   window.scrollTo(0, 0);
 }
 
+function goToEcosystem() {
+  showPage("home");
+
+  requestAnimationFrame(() => {
+    const ecosystemSection = document.getElementById("ecosystem");
+
+    if (ecosystemSection) {
+      ecosystemSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
+}
+
+function isMobile() {
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
+function handleQRClick() {
+  const appLink = "https://drive.google.com/file/d/1mgdjWcMFJZ6lZL--J8pxYVlhmP9PdM-P/view";
+
+  if (isMobile()) {
+    // Direct open on mobile
+    window.location.href = appLink;
+  } else {
+    // Show QR on desktop
+    toggleQR();
+  }
+}
+
 function toggleQR() {
-  const popup = document.getElementById("qrPopup");
-  popup.classList.toggle("hidden");
+  document.getElementById("qrPopup").classList.toggle("hidden");
 }
 
 function switchRole(role, el = null) {
   const container = document.getElementById("roleContent");
   const data = roleData[role];
+  container.className = `role-card role-card-${role}`;
 
   container.innerHTML = `
     <div class="role-card-inner">
