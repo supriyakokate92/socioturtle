@@ -616,7 +616,7 @@
                     <i class="fas fa-envelope text-primary mt-1 mr-4"></i>
                     <div>
                       <h3 class="font-semibold">Email</h3>
-                      <p class="text-gray-600">socioturtle8@gmail.com</p>
+                      <p class="text-gray-600">contact@[]socioturtle.[]com</p>
                     </div>
                   </div>
                   <!-- WhatsApp Group -->
@@ -678,14 +678,14 @@
                 </a>
 
                 <!-- Email -->
-                <a href="mailto:socioturtle8@gmail.com" class="text-center p-4 bg-gray-50 rounded-lg hover:shadow">
+                <a href="#contact" class="text-center p-4 bg-gray-50 rounded-lg hover:shadow" aria-label="Contact via email">
 
                   <div class="text-4xl text-gray-700 mb-2">
                     <i class="fas fa-envelope"></i>
                   </div>
 
                   <h3 class="font-semibold mb-1">Email Us</h3>
-                  <p class="text-sm text-gray-600">socioturtle8@gmail.com</p>
+                  <p class="text-sm text-gray-600">contact@[]socioturtle.[]com</p>
 
                 </a>
 
@@ -735,9 +735,14 @@
   <!-- Floating QR Button -->
   <div class="fixed top-1/2 right-3 md:right-5 -translate-y-1/2 z-50">
 
+    <!-- Register Button -->
+    <button class="register-btn jelly-btn flex items-center justify-center relative mb-3" onclick="handleRegisterClick()" aria-label="Register" title="Register">
+      <i class="fas fa-user-plus text-white text-xl" aria-hidden="true"></i>
+    </button>
+
     <!-- Button -->
-    <button class="qr-btn jelly-btn flex items-center justify-center relative" onclick="handleQRClick()">
-      <i class="fas fa-qrcode text-white text-xl"></i>
+    <button class="qr-btn jelly-btn flex items-center justify-center relative" onclick="handleQRClick()" aria-label="Download QR" title="Download App / QR">
+      <i class="fas fa-qrcode text-white text-xl" aria-hidden="true"></i>
     </button>
 
     <!-- Popup (Desktop only) -->
@@ -747,6 +752,39 @@
       <p class="text-xs text-gray-400 mt-2">Android</p>
     </div>
 
+  </div>
+
+  <!-- Registration Modal (hidden by default) -->
+  <div id="registerModal" class="hidden fixed inset-0 z-60 flex items-center justify-center p-4" aria-hidden="true">
+    <div class="modal-overlay absolute inset-0 bg-black/50" data-dismiss="modal"></div>
+
+    <div class="modal-panel relative bg-white rounded-xl shadow-xl max-w-md w-full p-6" role="dialog" aria-modal="true" aria-labelledby="registerTitle" aria-describedby="registerDesc">
+      <button class="modal-close absolute top-3 right-3 text-gray-500 hover:text-gray-800" aria-label="Close registration dialog">✕</button>
+
+      <h2 id="registerTitle" class="text-2xl font-bold mb-2">Register</h2>
+      <p id="registerDesc" class="text-sm text-gray-600 mb-4">Enter your email and we'll send a verification code.</p>
+
+      <form id="registerForm" class="space-y-4" novalidate>
+        <div>
+          <label for="regEmail" class="block text-sm font-medium text-gray-700">Email</label>
+          <input id="regEmail" name="email" type="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg mt-2" placeholder="you@example.com">
+          <p id="regEmailError" class="text-xs text-red-600 mt-1 hidden" aria-live="polite"></p>
+        </div>
+
+        <div id="verificationRow" class="hidden">
+          <label for="regCode" class="block text-sm font-medium text-gray-700">Verification code</label>
+          <input id="regCode" name="code" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg mt-2" placeholder="Enter 6-digit code">
+          <p id="regCodeError" class="text-xs text-red-600 mt-1 hidden" aria-live="polite"></p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button type="button" id="sendCodeBtn" class="bg-primary text-white px-4 py-2 rounded-lg font-medium">Send code</button>
+          <button type="button" id="verifyCodeBtn" class="bg-secondary text-white px-4 py-2 rounded-lg font-medium hidden">Verify</button>
+          <div id="regStatus" class="text-sm text-gray-600" aria-live="polite"></div>
+        </div>
+      </form>
+
+    </div>
   </div>
 </body>
 

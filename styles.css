@@ -101,6 +101,13 @@
       border-radius: 16px;
   }
 
+    /* Register button shares size but has a purple pulse */
+    .register-btn {
+      width: clamp(48px, 5vw, 72px);
+      height: clamp(48px, 5vw, 72px);
+      border-radius: 16px;
+    }
+
   /* 🍬 Jelly Base */
   .jelly-btn {
       background: linear-gradient(145deg, #22D3EE, #06B6D4);
@@ -136,6 +143,40 @@
       z-index: -1;
       animation: pulse-ring 2s infinite;
   }
+
+    /* Slightly different pulse for register button */
+    .register-btn::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      background: rgba(192, 132, 252, 0.42);
+      z-index: -1;
+      animation: pulse-ring 2s infinite;
+    }
+
+      /* Modal styles */
+      .modal-overlay {
+        backdrop-filter: blur(4px);
+      }
+
+      .modal-panel:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(34,211,238,0.12);
+      }
+
+      .modal-close {
+        background: transparent;
+        border: none;
+        font-size: 1rem;
+        line-height: 1;
+        padding: 6px;
+        cursor: pointer;
+      }
+
+      @media (max-width: 640px) {
+        .modal-panel { padding: 1rem; border-radius: 12px; }
+      }
 
   /* 🔁 Pulse animation */
   @keyframes pulse-ring {
