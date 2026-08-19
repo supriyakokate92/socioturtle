@@ -355,6 +355,9 @@ function submitRegisterForm(e) {
     body: JSON.stringify({
       email: email,
       source: 'website',
+      // Registering through this button is the only "opt in" step it has —
+      // treat it as consent to hear from us. Every send carries an unsubscribe link.
+      newsletter_opt_in: true,
       captcha: { challenge_id: _regChallengeId, answer: captchaAnswer },
       email_verify_token: _regEmailVerifyToken,
     }),
