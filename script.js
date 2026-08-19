@@ -107,9 +107,14 @@ function toggleQR() {
 }
 
 // Registration modal logic
+const REGISTER_API_BASE = 'https://api.socioturtle.com';
+
 let _prevActiveElement = null;
-let _pendingCode = null;
-let _pendingEmail = null;
+let _regChallengeId = null;
+let _regBusy = false;
+let _regOtpBusy = false;
+let _regEmailVerifyToken = null;
+let _regVerifiedEmail = null;
 
 function handleRegisterClick() {
   openRegisterModal();
@@ -128,14 +133,7 @@ function openRegisterModal() {
   // trap focus
   document.addEventListener('keydown', _modalKeyHandler);
 
-  // overlay & close
-  modal.querySelectorAll('[data-dismiss="modal"], .modal-close').forEach(el => {
-    el.addEventListener('click', closeRegisterModal);
-  });
-
-  // form buttons
-  document.getElementById('sendCodeBtn').addEventListener('click', sendVerificationCode);
-  document.getElementById('verifyCodeBtn').addEventListener('click', verifyCode);
+  loadRegCaptcha();
 }
 
 function closeRegisterModal() {
@@ -175,93 +173,251 @@ function _modalKeyHandler(e) {
   }
 }
 
-function sendVerificationCode() {
-  const emailEl = document.getElementById('regEmail');
-  const emailErr = document.getElementById('regEmailError');
-  const status = document.getElementById('regStatus');
-  emailErr.classList.add('hidden');
-  status.textContent = '';
+function loadRegCaptcha() {
+  _regChallengeId = null;
+  const slot = document.getElementById('regCaptchaSlot');
+  slot.textContent = 'Loading…';
 
-  const email = (emailEl && emailEl.value || '').trim();
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!email || !emailRegex.test(email)) {
-    emailErr.textContent = 'Please enter a valid email address.';
-    emailErr.classList.remove('hidden');
-    emailEl.focus();
-    return;
-  }
-
-  // generate 6-digit code
-  _pendingCode = Math.floor(100000 + Math.random() * 900000).toString();
-  _pendingEmail = email;
-
-  // simulate sending (in real app call backend)
-  status.textContent = 'Sending verification code…';
-  document.getElementById('sendCodeBtn').disabled = true;
-
-  setTimeout(() => {
-    status.textContent = 'Verification code sent. Check your email.';
-    // For demo / dev: reveal code in console (remove in production)
-    console.info('Verification code for', _pendingEmail, ':', _pendingCode);
-
-    // show verification input
-    document.getElementById('verificationRow').classList.remove('hidden');
-    document.getElementById('verifyCodeBtn').classList.remove('hidden');
-    document.getElementById('sendCodeBtn').classList.add('hidden');
-    document.getElementById('regCode').focus();
-  }, 700);
+  fetch(REGISTER_API_BASE + '/api/auth/captcha')
+    .then(r => {
+      if (!r.ok) throw new Error('captcha ' + r.status);
+      return r.json();
+    })
+    .then(data => {
+      _regChallengeId = data.challenge_id;
+      slot.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = data.image_data_uri;
+      img.alt = 'Captcha challenge';
+      img.className = 'max-w-full max-h-full';
+      slot.appendChild(img);
+    })
+    .catch(() => {
+      slot.textContent = 'Unavailable';
+    });
 }
 
-function verifyCode() {
-  const codeEl = document.getElementById('regCode');
-  const codeErr = document.getElementById('regCodeError');
-  const status = document.getElementById('regStatus');
-  codeErr.classList.add('hidden');
-  status.textContent = '';
+function setRegError(field, message) {
+  const label = field.charAt(0).toUpperCase() + field.slice(1);
+  const el = document.getElementById('reg' + label + 'Error');
+  if (el) {
+    el.textContent = message || '';
+    el.classList.toggle('hidden', !message);
+  }
+}
 
-  const entered = (codeEl && codeEl.value || '').trim();
-  if (!entered || entered.length < 6) {
-    codeErr.textContent = 'Enter the 6-digit code sent to your email.';
-    codeErr.classList.remove('hidden');
-    codeEl.focus();
+function markEmailUnverified() {
+  _regEmailVerifyToken = null;
+  _regVerifiedEmail = null;
+  document.getElementById('regEmailVerified').classList.add('hidden');
+}
+
+function sendRegOtp() {
+  if (_regOtpBusy) return;
+
+  const emailEl = document.getElementById('regEmail');
+  const email = (emailEl.value || '').trim();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  setRegError('email', '');
+
+  if (!email || !emailRegex.test(email)) {
+    setRegError('email', 'Enter a valid email address.');
     return;
   }
 
-  if (entered === _pendingCode) {
-    status.textContent = 'Verified — thank you!';
-    // success action: close after brief pause
-    setTimeout(() => {
-      closeRegisterModal();
-      // optionally, here you could POST to a server with _pendingEmail
-      _pendingCode = null; _pendingEmail = null;
-    }, 900);
-  } else {
-    codeErr.textContent = 'Incorrect code. Please try again.';
-    codeErr.classList.remove('hidden');
-    codeEl.focus();
+  _regOtpBusy = true;
+  const sendBtn = document.getElementById('regSendOtpBtn');
+  sendBtn.disabled = true;
+  sendBtn.textContent = 'Sending…';
+
+  fetch(REGISTER_API_BASE + '/api/leads/otp/send', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email }),
+  })
+    .then(response => response.json().then(body => ({ ok: response.ok, body: body })))
+    .then(result => {
+      if (!result.ok) {
+        const detail = typeof (result.body && result.body.detail) === 'string'
+          ? result.body.detail
+          : 'Could not send a code. Please try again.';
+        setRegError('email', detail);
+        return;
+      }
+      markEmailUnverified();
+      setRegError('otp', '');
+      document.getElementById('regOtpRow').classList.remove('hidden');
+      document.getElementById('regOtpHint').textContent = 'Code sent to ' + email + '. It expires in a few minutes.';
+      document.getElementById('regOtpCode').focus();
+    })
+    .catch(() => {
+      setRegError('email', 'Could not reach the server. Please check your connection and try again.');
+    })
+    .finally(() => {
+      _regOtpBusy = false;
+      sendBtn.disabled = false;
+      sendBtn.textContent = 'Send code';
+    });
+}
+
+function verifyRegOtp() {
+  if (_regOtpBusy) return;
+
+  const emailEl = document.getElementById('regEmail');
+  const codeEl = document.getElementById('regOtpCode');
+  const email = (emailEl.value || '').trim();
+  const code = (codeEl.value || '').trim();
+  setRegError('otp', '');
+
+  if (!code) {
+    setRegError('otp', 'Enter the 6-digit code sent to your email.');
+    return;
   }
+
+  _regOtpBusy = true;
+  const verifyBtn = document.getElementById('regVerifyOtpBtn');
+  verifyBtn.disabled = true;
+  verifyBtn.textContent = 'Verifying…';
+
+  fetch(REGISTER_API_BASE + '/api/leads/otp/verify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email, code: code }),
+  })
+    .then(response => response.json().then(body => ({ ok: response.ok, body: body })))
+    .then(result => {
+      if (!result.ok) {
+        const detail = typeof (result.body && result.body.detail) === 'string'
+          ? result.body.detail
+          : 'Incorrect code. Please try again.';
+        setRegError('otp', detail);
+        return;
+      }
+      _regEmailVerifyToken = result.body.verify_token;
+      _regVerifiedEmail = email;
+      document.getElementById('regEmailVerified').classList.remove('hidden');
+      document.getElementById('regOtpRow').classList.add('hidden');
+      codeEl.value = '';
+    })
+    .catch(() => {
+      setRegError('otp', 'Could not reach the server. Please check your connection and try again.');
+    })
+    .finally(() => {
+      _regOtpBusy = false;
+      verifyBtn.disabled = false;
+      verifyBtn.textContent = 'Verify';
+    });
+}
+
+function submitRegisterForm(e) {
+  e.preventDefault();
+  if (_regBusy) return;
+
+  const alertBox = document.getElementById('regAlert');
+  const status = document.getElementById('regStatus');
+  alertBox.classList.add('hidden');
+  status.textContent = '';
+  ['email', 'otp', 'captcha'].forEach(f => setRegError(f, ''));
+
+  const emailEl = document.getElementById('regEmail');
+  const captchaEl = document.getElementById('regCaptcha');
+
+  const email = (emailEl.value || '').trim();
+  const captchaAnswer = (captchaEl.value || '').trim();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  let bad = false;
+  if (!email || !emailRegex.test(email)) { setRegError('email', 'Enter a valid email address.'); bad = true; }
+  else if (!_regEmailVerifyToken || _regVerifiedEmail !== email) {
+    setRegError('email', 'Please verify your email address first.');
+    bad = true;
+  }
+  if (!captchaAnswer) { setRegError('captcha', 'Type the characters shown above.'); bad = true; }
+  if (bad) return;
+
+  if (!_regChallengeId) {
+    alertBox.textContent = 'Captcha could not load. Please refresh the image and try again.';
+    alertBox.classList.remove('hidden');
+    return;
+  }
+
+  _regBusy = true;
+  const submitBtn = document.getElementById('registerSubmitBtn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Registering…';
+
+  fetch(REGISTER_API_BASE + '/api/leads', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: email,
+      source: 'website',
+      captcha: { challenge_id: _regChallengeId, answer: captchaAnswer },
+      email_verify_token: _regEmailVerifyToken,
+    }),
+  })
+    .then(response => response.json().then(body => ({ ok: response.ok, body: body })))
+    .then(result => {
+      if (!result.ok) {
+        const detail = typeof (result.body && result.body.detail) === 'string'
+          ? result.body.detail
+          : 'Something went wrong. Please try again.';
+        alertBox.textContent = detail;
+        alertBox.classList.remove('hidden');
+        captchaEl.value = '';
+        loadRegCaptcha();
+        return;
+      }
+      status.textContent = "You're on the list — we'll be in touch shortly.";
+      setTimeout(closeRegisterModal, 1800);
+    })
+    .catch(() => {
+      alertBox.textContent = 'Could not reach the server. Please check your connection and try again.';
+      alertBox.classList.remove('hidden');
+      loadRegCaptcha();
+    })
+    .finally(() => {
+      _regBusy = false;
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Register';
+    });
 }
 
 function resetRegisterForm() {
-  const emailEl = document.getElementById('regEmail');
-  const codeEl = document.getElementById('regCode');
-  const emailErr = document.getElementById('regEmailError');
-  const codeErr = document.getElementById('regCodeError');
+  const form = document.getElementById('registerForm');
+  if (form) form.reset();
+
+  _regChallengeId = null;
+  markEmailUnverified();
+  document.getElementById('regOtpRow').classList.add('hidden');
+  document.getElementById('regOtpHint').textContent = '';
+  ['email', 'otp', 'captcha'].forEach(f => setRegError(f, ''));
+
+  const alertBox = document.getElementById('regAlert');
+  if (alertBox) alertBox.classList.add('hidden');
   const status = document.getElementById('regStatus');
-
-  if (emailEl) emailEl.value = '';
-  if (codeEl) codeEl.value = '';
-  if (emailErr) { emailErr.classList.add('hidden'); emailErr.textContent = ''; }
-  if (codeErr) { codeErr.classList.add('hidden'); codeErr.textContent = ''; }
   if (status) status.textContent = '';
-
-  const verificationRow = document.getElementById('verificationRow');
-  if (verificationRow) verificationRow.classList.add('hidden');
-  const verifyBtn = document.getElementById('verifyCodeBtn');
-  if (verifyBtn) verifyBtn.classList.add('hidden');
-  const sendBtn = document.getElementById('sendCodeBtn');
-  if (sendBtn) { sendBtn.classList.remove('hidden'); sendBtn.disabled = false; }
 }
+
+// One-time wiring — attached once so re-opening the modal doesn't stack duplicate listeners.
+(function initRegisterModal() {
+  const modal = document.getElementById('registerModal');
+  if (!modal) return;
+
+  modal.querySelectorAll('[data-dismiss="modal"], .modal-close').forEach(el => {
+    el.addEventListener('click', closeRegisterModal);
+  });
+
+  document.getElementById('regEmail').addEventListener('input', () => {
+    const current = document.getElementById('regEmail').value.trim();
+    if (_regVerifiedEmail && current !== _regVerifiedEmail) markEmailUnverified();
+  });
+
+  document.getElementById('regSendOtpBtn').addEventListener('click', sendRegOtp);
+  document.getElementById('regVerifyOtpBtn').addEventListener('click', verifyRegOtp);
+  document.getElementById('regCaptchaRefresh').addEventListener('click', loadRegCaptcha);
+  document.getElementById('registerForm').addEventListener('submit', submitRegisterForm);
+})();
 
 function switchRole(role, el = null) {
   const container = document.getElementById("roleContent");
