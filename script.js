@@ -210,6 +210,7 @@ function markEmailUnverified() {
   _regEmailVerifyToken = null;
   _regVerifiedEmail = null;
   document.getElementById('regEmailVerified').classList.add('hidden');
+  document.getElementById('regStatus').textContent = '';
 }
 
 function sendRegOtp() {
@@ -248,6 +249,7 @@ function sendRegOtp() {
       setRegError('otp', '');
       document.getElementById('regOtpRow').classList.remove('hidden');
       document.getElementById('regOtpHint').textContent = 'Code sent to ' + email + '. It expires in a few minutes.';
+      document.getElementById('regStatus').textContent = 'Verification code sent — check your inbox.';
       document.getElementById('regOtpCode').focus();
     })
     .catch(() => {
@@ -297,6 +299,7 @@ function verifyRegOtp() {
       _regVerifiedEmail = email;
       document.getElementById('regEmailVerified').classList.remove('hidden');
       document.getElementById('regOtpRow').classList.add('hidden');
+      document.getElementById('regStatus').textContent = '';
       codeEl.value = '';
     })
     .catch(() => {
