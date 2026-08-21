@@ -110,7 +110,6 @@ function toggleQR() {
 const REGISTER_API_BASE = 'https://api.socioturtle.com';
 
 let _prevActiveElement = null;
-let _regBusy = false;
 let _regOtpBusy = false;
 let _regEmailVerifyToken = null;
 let _regVerifiedEmail = null;
@@ -272,8 +271,9 @@ function verifyRegOtp() {
       _regVerifiedEmail = email;
       document.getElementById('regEmailVerified').classList.remove('hidden');
       document.getElementById('regOtpRow').classList.add('hidden');
-      document.getElementById('regStatus').textContent = '';
       codeEl.value = '';
+      verifyBtn.textContent = 'Registering…';
+      return completeRegistration(email);
     })
     .catch(() => {
       setRegError('otp', 'Could not reach the server. Please check your connection and try again.');
@@ -285,41 +285,22 @@ function verifyRegOtp() {
     });
 }
 
-function submitRegisterForm(e) {
-  e.preventDefault();
-  if (_regBusy) return;
-
+function completeRegistration(email) {
+  // Verifying the code IS registering — no separate submit step needed.
   const alertBox = document.getElementById('regAlert');
   const status = document.getElementById('regStatus');
   alertBox.classList.add('hidden');
   status.textContent = '';
-  ['email', 'otp'].forEach(f => setRegError(f, ''));
 
-  const emailEl = document.getElementById('regEmail');
-  const email = (emailEl.value || '').trim();
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  let bad = false;
-  if (!email || !emailRegex.test(email)) { setRegError('email', 'Enter a valid email address.'); bad = true; }
-  else if (!_regEmailVerifyToken || _regVerifiedEmail !== email) {
-    setRegError('email', 'Please verify your email address first.');
-    bad = true;
-  }
-  if (bad) return;
-
-  _regBusy = true;
-  const submitBtn = document.getElementById('registerSubmitBtn');
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Registering…';
-
-  fetch(REGISTER_API_BASE + '/api/leads', {
+  return fetch(REGISTER_API_BASE + '/api/leads', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       email: email,
       source: 'website',
-      // Registering through this button is the only "opt in" step it has —
-      // treat it as consent to hear from us. Every send carries an unsubscribe link.
+      // Verifying an email through this flow is the only "opt in" step it
+      // has — treat it as consent to hear from us. Every send carries an
+      // unsubscribe link.
       newsletter_opt_in: true,
       email_verify_token: _regEmailVerifyToken,
     }),
@@ -334,17 +315,12 @@ function submitRegisterForm(e) {
         alertBox.classList.remove('hidden');
         return;
       }
-      status.textContent = "You're on the list — we'll be in touch shortly.";
+      status.textContent = 'All Set! You are registered 😊';
       setTimeout(closeRegisterModal, 1800);
     })
     .catch(() => {
       alertBox.textContent = 'Could not reach the server. Please check your connection and try again.';
       alertBox.classList.remove('hidden');
-    })
-    .finally(() => {
-      _regBusy = false;
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Register';
     });
 }
 
@@ -379,7 +355,6 @@ function resetRegisterForm() {
 
   document.getElementById('regSendOtpBtn').addEventListener('click', sendRegOtp);
   document.getElementById('regVerifyOtpBtn').addEventListener('click', verifyRegOtp);
-  document.getElementById('registerForm').addEventListener('submit', submitRegisterForm);
 })();
 
 function switchRole(role, el = null) {
