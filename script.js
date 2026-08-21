@@ -110,7 +110,6 @@ function toggleQR() {
 const REGISTER_API_BASE = 'https://api.socioturtle.com';
 
 let _prevActiveElement = null;
-let _regChallengeId = null;
 let _regBusy = false;
 let _regOtpBusy = false;
 let _regEmailVerifyToken = null;
@@ -132,8 +131,6 @@ function openRegisterModal() {
 
   // trap focus
   document.addEventListener('keydown', _modalKeyHandler);
-
-  loadRegCaptcha();
 }
 
 function closeRegisterModal() {
@@ -171,30 +168,6 @@ function _modalKeyHandler(e) {
       first.focus();
     }
   }
-}
-
-function loadRegCaptcha() {
-  _regChallengeId = null;
-  const slot = document.getElementById('regCaptchaSlot');
-  slot.textContent = 'Loading…';
-
-  fetch(REGISTER_API_BASE + '/api/auth/captcha')
-    .then(r => {
-      if (!r.ok) throw new Error('captcha ' + r.status);
-      return r.json();
-    })
-    .then(data => {
-      _regChallengeId = data.challenge_id;
-      slot.innerHTML = '';
-      const img = document.createElement('img');
-      img.src = data.image_data_uri;
-      img.alt = 'Captcha challenge';
-      img.className = 'max-w-full max-h-full';
-      slot.appendChild(img);
-    })
-    .catch(() => {
-      slot.textContent = 'Unavailable';
-    });
 }
 
 function setRegError(field, message) {
@@ -320,13 +293,10 @@ function submitRegisterForm(e) {
   const status = document.getElementById('regStatus');
   alertBox.classList.add('hidden');
   status.textContent = '';
-  ['email', 'otp', 'captcha'].forEach(f => setRegError(f, ''));
+  ['email', 'otp'].forEach(f => setRegError(f, ''));
 
   const emailEl = document.getElementById('regEmail');
-  const captchaEl = document.getElementById('regCaptcha');
-
   const email = (emailEl.value || '').trim();
-  const captchaAnswer = (captchaEl.value || '').trim();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   let bad = false;
@@ -335,14 +305,7 @@ function submitRegisterForm(e) {
     setRegError('email', 'Please verify your email address first.');
     bad = true;
   }
-  if (!captchaAnswer) { setRegError('captcha', 'Type the characters shown above.'); bad = true; }
   if (bad) return;
-
-  if (!_regChallengeId) {
-    alertBox.textContent = 'Captcha could not load. Please refresh the image and try again.';
-    alertBox.classList.remove('hidden');
-    return;
-  }
 
   _regBusy = true;
   const submitBtn = document.getElementById('registerSubmitBtn');
@@ -358,7 +321,6 @@ function submitRegisterForm(e) {
       // Registering through this button is the only "opt in" step it has —
       // treat it as consent to hear from us. Every send carries an unsubscribe link.
       newsletter_opt_in: true,
-      captcha: { challenge_id: _regChallengeId, answer: captchaAnswer },
       email_verify_token: _regEmailVerifyToken,
     }),
   })
@@ -370,8 +332,6 @@ function submitRegisterForm(e) {
           : 'Something went wrong. Please try again.';
         alertBox.textContent = detail;
         alertBox.classList.remove('hidden');
-        captchaEl.value = '';
-        loadRegCaptcha();
         return;
       }
       status.textContent = "You're on the list — we'll be in touch shortly.";
@@ -380,7 +340,6 @@ function submitRegisterForm(e) {
     .catch(() => {
       alertBox.textContent = 'Could not reach the server. Please check your connection and try again.';
       alertBox.classList.remove('hidden');
-      loadRegCaptcha();
     })
     .finally(() => {
       _regBusy = false;
@@ -393,11 +352,10 @@ function resetRegisterForm() {
   const form = document.getElementById('registerForm');
   if (form) form.reset();
 
-  _regChallengeId = null;
   markEmailUnverified();
   document.getElementById('regOtpRow').classList.add('hidden');
   document.getElementById('regOtpHint').textContent = '';
-  ['email', 'otp', 'captcha'].forEach(f => setRegError(f, ''));
+  ['email', 'otp'].forEach(f => setRegError(f, ''));
 
   const alertBox = document.getElementById('regAlert');
   if (alertBox) alertBox.classList.add('hidden');
@@ -421,7 +379,6 @@ function resetRegisterForm() {
 
   document.getElementById('regSendOtpBtn').addEventListener('click', sendRegOtp);
   document.getElementById('regVerifyOtpBtn').addEventListener('click', verifyRegOtp);
-  document.getElementById('regCaptchaRefresh').addEventListener('click', loadRegCaptcha);
   document.getElementById('registerForm').addEventListener('submit', submitRegisterForm);
 })();
 

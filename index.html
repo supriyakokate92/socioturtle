@@ -733,12 +733,15 @@
   </footer>
   <script src="script.js" defer></script>
   <!-- Floating QR Button -->
-  <div class="fixed top-1/2 right-3 md:right-5 -translate-y-1/2 z-50">
+  <div class="fixed top-24 right-3 md:right-5 z-50">
 
     <!-- Register Button -->
-    <button class="register-btn jelly-btn flex items-center justify-center relative mb-3" onclick="handleRegisterClick()" aria-label="Register" title="Register">
-      <i class="fas fa-user-plus text-white text-xl" aria-hidden="true"></i>
-    </button>
+    <div class="relative mb-3">
+      <span class="register-flash-badge hidden sm:inline-flex" aria-hidden="true">🏀 Dunk here →</span>
+      <button class="register-btn jelly-btn flex items-center justify-center relative" onclick="handleRegisterClick()" aria-label="Register" title="Register">
+        <i class="fas fa-user-plus text-white text-xl" aria-hidden="true"></i>
+      </button>
+    </div>
 
     <!-- Button -->
     <button class="qr-btn jelly-btn flex items-center justify-center relative" onclick="handleQRClick()" aria-label="Download QR" title="Download App / QR">
@@ -785,16 +788,6 @@
             <p id="regOtpError" class="text-xs text-red-600 mt-1 hidden" aria-live="polite"></p>
             <p id="regOtpHint" class="text-xs text-gray-500 mt-1"></p>
           </div>
-        </div>
-
-        <div>
-          <label for="regCaptcha" class="block text-sm font-medium text-gray-700">Type the characters shown</label>
-          <div class="flex items-center gap-3 mt-2">
-            <div id="regCaptchaSlot" class="w-40 h-14 border border-gray-300 rounded-lg bg-gray-50 flex items-center justify-center text-xs text-gray-500 overflow-hidden">Loading…</div>
-            <button type="button" id="regCaptchaRefresh" class="text-xs text-primary underline">New image</button>
-          </div>
-          <input id="regCaptcha" name="captcha" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" class="w-full px-4 py-3 border border-gray-300 rounded-lg mt-2">
-          <p id="regCaptchaError" class="text-xs text-red-600 mt-1 hidden" aria-live="polite"></p>
         </div>
 
         <button type="submit" id="registerSubmitBtn" class="w-full bg-primary text-white px-4 py-3 rounded-lg font-medium">Register</button>
