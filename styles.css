@@ -155,6 +155,39 @@
       animation: pulse-ring 2s infinite;
     }
 
+    /* Flashing call-to-action badge next to the register button — bigger,
+       tilted "sticker" look with a gradient and a bouncy wiggle. */
+    .register-flash-badge {
+      position: absolute;
+      right: calc(100% + 14px);
+      top: 50%;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      text-align: center;
+      background: linear-gradient(135deg, #22D3EE, #C084FC);
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.5rem;
+      line-height: 1.2;
+      letter-spacing: 0.01em;
+      padding: 22px 28px;
+      min-width: 140px;
+      min-height: 88px;
+      border-radius: 28px;
+      white-space: nowrap;
+      box-shadow: 0 12px 28px rgba(192, 132, 252, 0.5);
+      pointer-events: none;
+      transform-origin: center;
+      animation: flash-badge 1.3s ease-in-out infinite;
+    }
+
+    @keyframes flash-badge {
+      0%, 100% { transform: translateY(-50%) rotate(-6deg) scale(1); }
+      50% { transform: translateY(-50%) rotate(4deg) scale(1.1); }
+    }
+
       /* Modal styles */
       .modal-overlay {
         backdrop-filter: blur(4px);
