@@ -315,7 +315,7 @@ function completeRegistration(email) {
         alertBox.classList.remove('hidden');
         return;
       }
-      status.textContent = 'All Set! You are registered 😊';
+      status.innerHTML = 'All Set! You are registered 😊<br>Check your mail for access to Socioturtle Portal';
       setTimeout(closeRegisterModal, 1800);
     })
     .catch(() => {
