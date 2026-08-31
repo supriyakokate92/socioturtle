@@ -316,7 +316,6 @@ function completeRegistration(email) {
         return;
       }
       status.innerHTML = 'All Set! You are registered 😊<br>Check your mail for access to Socioturtle Portal';
-      setTimeout(closeRegisterModal, 1800);
     })
     .catch(() => {
       alertBox.textContent = 'Could not reach the server. Please check your connection and try again.';
